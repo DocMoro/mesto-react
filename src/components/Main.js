@@ -1,5 +1,6 @@
 import React from 'react';
 import api from '../utils/Api';
+import Card from './Card';
 
 export default class Main extends React.Component {
   constructor(props) {
@@ -45,16 +46,7 @@ export default class Main extends React.Component {
         <section className="cards-section content__cards-section">
           <ul className="cards">
             {this.state.cards.map((card) => (
-              <li className="card" key={card._id}>
-                <img className="card__image" src={card.link} alt="#" />
-                <div className="card__group">
-                  <h2 className="card__title">{card.name}</h2>
-                  <div className="card__like">
-                    <button type="button" className="card__button button" aria-label="Мне нравится"></button>
-                    <p className="card__counter-like">{card.likes.length}</p>
-                  </div>
-                </div>
-              </li>
+              <Card card={card} onCardClick={this.props.onCardClick}/>
             ))}
           </ul>
         </section>
