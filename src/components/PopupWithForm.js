@@ -9,7 +9,7 @@ export default class PopupWithForm extends React.Component {
     return (
       <div className={`popup page__${this.props.name}-popup ${this.props.isOpen ? "popup_active" : ""}`}  >
         <div className="popup__container">
-          <button type="button" className="popup__button-close button" aria-label="Закрыть"></button>
+          <button type="button" className="popup__button-close button" aria-label="Закрыть" onClick={this.props.onClose}></button>
           <form name={`${this.props.name}-form`} className="popup__form">
             <h2 className="popup__title">{this.props.title}</h2>
             <input name="cardName" type="text" className="popup__input popup__input_field_card-name" placeholder="Название" minLength="2" maxLength="30" required />
