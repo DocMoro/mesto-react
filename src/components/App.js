@@ -58,18 +58,6 @@ export default class App extends React.Component  {
         <PopupWithForm name="delete" title="Вы уверены?" />
         <PopupWithForm name="avatar" title="Обновить аватар" isOpen={this.state.isEditAvatarPopupOpen} onClose={this.closeAllPopups}/>
         <ImagePopup />
-        <template className="template-card">
-          <li className="card">
-            <img className="card__image" src="#" alt="#" />
-            <div className="card__group">
-              <h2 className="card__title"></h2>
-              <div className="card__like">
-                <button type="button" className="card__button button" aria-label="Мне нравится"></button>
-                <p className="card__counter-like">1</p>
-              </div>
-            </div>
-          </li>
-        </template>
       </div>
     );
   }

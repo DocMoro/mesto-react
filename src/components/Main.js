@@ -8,17 +8,19 @@ export default class Main extends React.Component {
     this.state = {
       userName: '',
       userDescription : '',
-      userAvatar: ''
+      userAvatar: '',
+      cards: []
     };
   }
 
   componentDidMount() {
-      api.getUserInfo()
-        .then(dataUser => {
+      Promise.all([api.getUserInfo(), api.getInitialCards()])
+        .then(([dataUser, dataCards]) => {
           this.setState({
             userName: dataUser.name,
             userDescription : dataUser.about,
-            userAvatar: dataUser.avatar
+            userAvatar: dataUser.avatar,
+            cards: dataCards.slice(0, 6)
           });
         })
         .catch(err => console.log(err));
@@ -42,6 +44,18 @@ export default class Main extends React.Component {
         </section>
         <section className="cards-section content__cards-section">
           <ul className="cards">
+            {this.state.cards.map((card) => (
+              <li className="card" key={card._id}>
+                <img className="card__image" src={card.link} alt="#" />
+                <div className="card__group">
+                  <h2 className="card__title">{card.name}</h2>
+                  <div className="card__like">
+                    <button type="button" className="card__button button" aria-label="Мне нравится"></button>
+                    <p className="card__counter-like">{card.likes.length}</p>
+                  </div>
+                </div>
+              </li>
+            ))}
           </ul>
         </section>
       </main>
