@@ -7,7 +7,7 @@ export default class PopupWithForm extends React.Component {
 
   render() {
     return (
-      <div className={`popup page__${this.props.name}-popup`}  >
+      <div className={`popup page__${this.props.name}-popup ${this.props.isOpen ? "popup_active" : ""}`}  >
         <div className="popup__container">
           <button type="button" className="popup__button-close button" aria-label="Закрыть"></button>
           <form name={`${this.props.name}-form`} className="popup__form">
