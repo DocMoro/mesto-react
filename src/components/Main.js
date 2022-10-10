@@ -21,7 +21,7 @@ export default class Main extends React.Component {
             userName: dataUser.name,
             userDescription : dataUser.about,
             userAvatar: dataUser.avatar,
-            cards: dataCards.slice(0, 6)
+            cards: dataCards.slice(0, 21)
           });
         })
         .catch(err => console.log(err));
@@ -46,7 +46,7 @@ export default class Main extends React.Component {
         <section className="cards-section content__cards-section">
           <ul className="cards">
             {this.state.cards.map((card) => (
-              <Card card={card} onCardClick={this.props.onCardClick}/>
+              <Card card={card} onCardClick={this.props.onCardClick} key={card._id}/>
             ))}
           </ul>
         </section>

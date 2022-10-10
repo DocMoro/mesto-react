@@ -7,7 +7,7 @@ export default class ImagePopup extends React.Component {
 
   render() {
     return (
-      <div className={`popup popup_card page__card-popup ${this.props.card && "popup_active"}`}>
+      <div className={`popup popup_card page__card-popup ${this.props.card.link !== '' && "popup_active"}`}>
         <div className="popup__card-container">
           <button type="button" className="popup__button-close button" aria-label="Закрыть" onClick={this.props.onClose}></button>
           <img className="popup__image" src={this.props.card.link} alt={this.props.card.name} />

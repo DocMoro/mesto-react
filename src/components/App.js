@@ -19,7 +19,7 @@ export default class App extends React.Component  {
       isEditProfilePopupOpen: false,
       isAddPlacePopupOpen: false,
       isEditAvatarPopupOpen: false,
-      selectedCard: false
+      selectedCard: {name: '', link: ''}
     };
   }
 
@@ -52,7 +52,7 @@ export default class App extends React.Component  {
       isAddPlacePopupOpen: false,
       isEditProfilePopupOpen: false,
       isEditAvatarPopupOpen: false,
-      selectedCard: false
+      selectedCard: {name: '', link: ''}
     });
   }
 
@@ -62,10 +62,20 @@ export default class App extends React.Component  {
         <Header />
         <Main onEditProfile={this.handleEditProfileClick} onAddPlace={this.handleAddPlaceClick} onEditAvatar={this.handleEditAvatarClick} onCardClick={this.handleCardClick}/>
         <Footer />
-        <PopupWithForm name="edit" title="Редактировать профиль" isOpen={this.state.isEditProfilePopupOpen} onClose={this.closeAllPopups}/>
-        <PopupWithForm name="add" title="Новое место" isOpen={this.state.isAddPlacePopupOpen} onClose={this.closeAllPopups}/>
-        <PopupWithForm name="delete" title="Вы уверены?" />
-        <PopupWithForm name="avatar" title="Обновить аватар" isOpen={this.state.isEditAvatarPopupOpen} onClose={this.closeAllPopups}/>
+        <PopupWithForm name="edit" title="Редактировать профиль" isOpen={this.state.isEditProfilePopupOpen} onClose={this.closeAllPopups} buttonText="Подтвердить">
+          <input name="cardName" type="text" className="popup__input popup__input_field_card-name" placeholder="Имя" minLength="2" maxLength="30" required />
+          <span className="popup__input-error cardName-error"></span>
+          <input name="cardLink" type="url" className="popup__input popup__input_field_card-link" placeholder="О себе" required />
+        </ PopupWithForm>
+        <PopupWithForm name="add" title="Новое место" isOpen={this.state.isAddPlacePopupOpen} onClose={this.closeAllPopups} buttonText="Создать">
+          <input name="cardName" type="text" className="popup__input popup__input_field_card-name" placeholder="Название" minLength="2" maxLength="30" required />
+          <span className="popup__input-error cardName-error"></span>
+          <input name="cardLink" type="url" className="popup__input popup__input_field_card-link" placeholder="Ссылка на картинку" required />
+        </ PopupWithForm>
+        <PopupWithForm name="delete" title="Вы уверены?" buttonText="Удалить"/>
+        <PopupWithForm name="avatar" title="Обновить аватар" isOpen={this.state.isEditAvatarPopupOpen} onClose={this.closeAllPopups} buttonText="Добавить">
+          <input name="cardLink" type="url" className="popup__input popup__input_field_card-link" placeholder="Ссылка на картинку" required />
+        </ PopupWithForm>
         <ImagePopup card={this.state.selectedCard} onClose={this.closeAllPopups}/>
       </div>
     );
