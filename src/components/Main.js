@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import api from '../utils/Api';
 import Card from './Card';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
@@ -12,6 +12,15 @@ export default function Main({onEditAvatar, onEditProfile, onAddPlace, onCardCli
       .then(dataCards => setCards(dataCards.slice(0, 21)))
       .catch(err => console.log(err));
   }, []);
+
+  function handleCardLike(card) {
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    const method = isLiked ? 'DELETE' : 'PUT';
+    
+    api.likeCard(card._id, method).then((newCard) => {
+        setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+    });
+}
 
   return (
     <main className="content page__section">
@@ -31,7 +40,7 @@ export default function Main({onEditAvatar, onEditProfile, onAddPlace, onCardCli
       <section className="cards-section content__cards-section">
         <ul className="cards">
           {cards.map((card) => (
-            <Card card={card} onCardClick={onCardClick} key={card._id}/>
+            <Card card={card} onCardClick={onCardClick} onCardLike={handleCardLike} key={card._id}/>
           ))}
         </ul>
       </section>
