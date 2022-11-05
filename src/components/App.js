@@ -20,7 +20,6 @@ export default function App() {
 
   const [cards, setCards] = useState([]);
 
-
   useEffect(() => {
     Promise.all([api.getUserInfo(), api.getInitialCards()])
       .then(([dataUser, dataCards])  => {
@@ -34,17 +33,20 @@ export default function App() {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
     const method = isLiked ? 'DELETE' : 'PUT';
     
-    api.likeCard(card._id, method).then((newCard) => {
+    api.likeCard(card._id, method)
+      .then((newCard) => {
         setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
-    });
+      })
+      .catch(err => console.log(err));
   }
 
   function handleCardDelete(card) {
-    api.deleteCard(card._id).then(() => {
+    api.deleteCard(card._id)
+      .then(() => {
         setCards((state) => state.filter((c) => c._id !== card._id));
-    });
+      })
+      .catch(err => console.log(err));
   }
-  
 
   function handleEditProfileClick() {
     setEditProfileClick(!isEditProfilePopupOpen);
@@ -69,11 +71,16 @@ export default function App() {
     setSelectedCard({name: '', link: ''});
   }
 
-
   function handleUpdateUser(data) {
     api.setUserInfo(data.name, data.about)
-      .then(data => setCurrentUser({name: data.name, about: data.about, avatar: currentUser.avatar}))
-      .then(() => closeAllPopups())
+      .then(data => {
+        setCurrentUser({
+          name: data.name, 
+          about: data.about, 
+          avatar: currentUser.avatar
+        });
+        closeAllPopups();
+      })
       .catch(err => console.log(err));
   }
 
@@ -90,7 +97,6 @@ export default function App() {
       .then(() => closeAllPopups())
       .catch(err => console.log(err));
   }
-
 
   return (
     <CurrentUserContext.Provider value={currentUser}>

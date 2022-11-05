@@ -1,11 +1,9 @@
 import { useEffect, useState, useContext } from 'react';
-import api from '../utils/Api';
 import Card from './Card';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 export default function Main({onEditAvatar, onEditProfile, onAddPlace, onCardClick, cards, onCardLike, onCardDelete}) {
   const currentUser = useContext(CurrentUserContext);
-
 
   return (
     <main className="content page__section">
