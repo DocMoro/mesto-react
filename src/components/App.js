@@ -3,6 +3,7 @@ import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
+import EditProfilePopup from './EditProfilePopup';
 import ImagePopup from './ImagePopup';
 import api from '../utils/Api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
@@ -43,17 +44,20 @@ export default function App() {
     setSelectedCard({name: '', link: ''});
   }
 
+  function handleUpdateUser(data) {
+    api.setUserInfo(data.name, data.about)
+      .then(data => setCurrentUser({name: data.name, about: data.about, avatar: currentUser.avatar}))
+      .then(() => closeAllPopups())
+      .catch(err => console.log(err));
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <Header />
         <Main onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} onCardClick={handleCardClick}/>
         <Footer />
-        <PopupWithForm name="edit" title="Редактировать профиль" isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} buttonText="Подтвердить">
-          <input name="cardName" type="text" className="popup__input popup__input_field_card-name" placeholder="Имя" minLength="2" maxLength="30" required />
-          <span className="popup__input-error cardName-error"></span>
-          <input name="cardLink" type="url" className="popup__input popup__input_field_card-link" placeholder="О себе" required />
-        </ PopupWithForm>
+        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}/>
         <PopupWithForm name="add" title="Новое место" isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} buttonText="Создать">
           <input name="cardName" type="text" className="popup__input popup__input_field_card-name" placeholder="Название" minLength="2" maxLength="30" required />
           <span className="popup__input-error cardName-error"></span>
