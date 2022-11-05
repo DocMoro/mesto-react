@@ -14,14 +14,37 @@ export default function App() {
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({name: '', link: ''});
+
   const [currentUser, setCurrentUser] = useState({name: '', about: '', avatar: '#'});
 
+  const [cards, setCards] = useState([]);
+
+
   useEffect(() => {
-    api.getUserInfo()
-      .then(dataUser => setCurrentUser(dataUser))
+    Promise.all([api.getUserInfo(), api.getInitialCards()])
+      .then(([dataUser, dataCards])  => {
+        setCurrentUser(dataUser);
+        setCards(dataCards.slice(0, 21));
+      })
       .catch(err => console.log(err));
   }, []);
+
+  function handleCardLike(card) {
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    const method = isLiked ? 'DELETE' : 'PUT';
+    
+    api.likeCard(card._id, method).then((newCard) => {
+        setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+    });
+  }
+
+  function handleCardDelete(card) {
+    api.deleteCard(card._id).then(() => {
+        setCards((state) => state.filter((c) => c._id !== card._id));
+    });
+  }
   
+
   function handleEditProfileClick() {
     setEditProfileClick(!isEditProfilePopupOpen);
   }
@@ -45,6 +68,7 @@ export default function App() {
     setSelectedCard({name: '', link: ''});
   }
 
+  
   function handleUpdateUser(data) {
     api.setUserInfo(data.name, data.about)
       .then(data => setCurrentUser({name: data.name, about: data.about, avatar: currentUser.avatar}))
@@ -59,11 +83,20 @@ export default function App() {
       .catch(err => console.log(err));
   }
 
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <Header />
-        <Main onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} onCardClick={handleCardClick}/>
+        <Main 
+          onEditProfile={handleEditProfileClick} 
+          onAddPlace={handleAddPlaceClick} 
+          onEditAvatar={handleEditAvatarClick} 
+          onCardClick={handleCardClick} 
+          cards={cards} 
+          onCardLike={handleCardLike} 
+          onCardDelete={handleCardDelete}
+        />
         <Footer />
         <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}/>
         <PopupWithForm name="add" title="Новое место" isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} buttonText="Создать">
