@@ -5,6 +5,7 @@ import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
 import EditAvatarPopup from './EditAvatarPopup';
 import EditProfilePopup from './EditProfilePopup';
+import AddPlacePopup from './AddPlacePopup';
 import ImagePopup from './ImagePopup';
 import api from '../utils/Api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
@@ -68,7 +69,7 @@ export default function App() {
     setSelectedCard({name: '', link: ''});
   }
 
-  
+
   function handleUpdateUser(data) {
     api.setUserInfo(data.name, data.about)
       .then(data => setCurrentUser({name: data.name, about: data.about, avatar: currentUser.avatar}))
@@ -79,6 +80,13 @@ export default function App() {
   function handleUpdateAvatar(data) {
     api.setUserAvatar(data.avatar)
       .then(data => setCurrentUser({name: currentUser.name, about: currentUser.about, avatar: data.avatar}))
+      .then(() => closeAllPopups())
+      .catch(err => console.log(err));
+  }
+
+  function handleAddPlaceSubmit(data) {
+    api.addCard(data.name, data.link)
+      .then(newCard => setCards([newCard, ...cards]))
       .then(() => closeAllPopups())
       .catch(err => console.log(err));
   }
@@ -98,15 +106,30 @@ export default function App() {
           onCardDelete={handleCardDelete}
         />
         <Footer />
-        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}/>
-        <PopupWithForm name="add" title="Новое место" isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} buttonText="Создать">
-          <input name="cardName" type="text" className="popup__input popup__input_field_card-name" placeholder="Название" minLength="2" maxLength="30" required />
-          <span className="popup__input-error cardName-error"></span>
-          <input name="cardLink" type="url" className="popup__input popup__input_field_card-link" placeholder="Ссылка на картинку" required />
-        </ PopupWithForm>
-        <PopupWithForm name="delete" title="Вы уверены?" buttonText="Удалить"/>
-        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}/>
-        <ImagePopup card={selectedCard} onClose={closeAllPopups}/>
+        <EditProfilePopup 
+          isOpen={isEditProfilePopupOpen} 
+          onClose={closeAllPopups} 
+          onUpdateUser={handleUpdateUser}
+        />
+        <AddPlacePopup 
+          isOpen={isAddPlacePopupOpen} 
+          onClose={closeAllPopups} 
+          onAddPlace={handleAddPlaceSubmit}
+        />
+        <EditAvatarPopup 
+          isOpen={isEditAvatarPopupOpen} 
+          onClose={closeAllPopups} 
+          onUpdateAvatar={handleUpdateAvatar}
+        />
+        <ImagePopup 
+          card={selectedCard} 
+          onClose={closeAllPopups}
+        />
+        <PopupWithForm 
+          name="delete" 
+          title="Вы уверены?" 
+          buttonText="Удалить"
+        />
       </div>
     </CurrentUserContext.Provider>
   );
