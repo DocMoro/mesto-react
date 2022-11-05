@@ -35,6 +35,7 @@ export default function EditProfilePopup({isOpen, onClose, onUpdateUser}) {
       <input name="profileName" type="text" className="popup__input popup__input_field_name" value={name} onChange={handleChangeName} placeholder="Имя" minLength="2" maxLength="40" required />
       <span className="popup__input-error profileName-error"></span>
       <input name="profileInfo" type="text" className="popup__input popup__input_field_about-me" value={description} onChange={handleChangeDescription} placeholder="О себе" minLength="2" maxLength="200" required />
+      <span className="popup__input-error profileInfo-error"></span>
     </ PopupWithForm>
   )
 }

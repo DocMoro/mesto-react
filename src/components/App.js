@@ -3,6 +3,7 @@ import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
+import EditAvatarPopup from './EditAvatarPopup';
 import EditProfilePopup from './EditProfilePopup';
 import ImagePopup from './ImagePopup';
 import api from '../utils/Api';
@@ -51,6 +52,13 @@ export default function App() {
       .catch(err => console.log(err));
   }
 
+  function handleUpdateAvatar(data) {
+    api.setUserAvatar(data.avatar)
+      .then(data => setCurrentUser({name: currentUser.name, about: currentUser.about, avatar: data.avatar}))
+      .then(() => closeAllPopups())
+      .catch(err => console.log(err));
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -64,9 +72,7 @@ export default function App() {
           <input name="cardLink" type="url" className="popup__input popup__input_field_card-link" placeholder="Ссылка на картинку" required />
         </ PopupWithForm>
         <PopupWithForm name="delete" title="Вы уверены?" buttonText="Удалить"/>
-        <PopupWithForm name="avatar" title="Обновить аватар" isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} buttonText="Добавить">
-          <input name="cardLink" type="url" className="popup__input popup__input_field_card-link" placeholder="Ссылка на картинку" required />
-        </ PopupWithForm>
+        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}/>
         <ImagePopup card={selectedCard} onClose={closeAllPopups}/>
       </div>
     </CurrentUserContext.Provider>

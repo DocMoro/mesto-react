@@ -8,7 +8,6 @@ export default function PopupWithForm({name, title, isOpen, onClose, buttonText,
         <form name={`${name}-form`} className="popup__form" onSubmit={onSubmit}>
           <h2 className="popup__title">{title}</h2>
           {children}
-          <span className="popup__input-error cardLink-error"></span>
           <button type="submit" className="popup__button button">{buttonText}</button>
         </form>
       </div>
